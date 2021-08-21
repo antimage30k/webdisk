@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload</title>
+</head>
+<body>
+    {% for f in files %}
+    <div class="class-file">
+        <p>
+            {{ f.name }} | {{ f.size }} | {{ f.path }}
+        </p>
+    </div>
+    {% endfor %}
+<div class="inner">
+    <form method="post"
+          action="{{ url_for('disk.upload') }}"
+          enctype="multipart/form-data">
+        <input type="file" name="file" id="id-file">
+        <input type="text" name="size" id="id-size" hidden>
+        <button type="submit" class="span-primary submit_btn">上传</button>
+    </form>
+</div>
+
+</body>
+<script>
+    var e = function (selector) {
+        return document.querySelector(selector)
+    }
+    var fileInput = e('#id-file')
+    fileInput.onchange = function () {
+        var file = fileInput.files[0]
+        var size = file.size
+        var sizeInput = e('#id-size')
+        console.log(size)
+        sizeInput.value = size
+    }
+</script>
+</html>
