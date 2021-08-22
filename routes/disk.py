@@ -1,6 +1,4 @@
-import sys
-
-from flask import render_template, redirect, abort, send_from_directory, Blueprint, request
+from flask import render_template, redirect, abort, send_from_directory, Blueprint, request, jsonify
 from hashlib import md5
 import os
 from werkzeug.datastructures import FileStorage
@@ -17,8 +15,14 @@ disk = Blueprint('disk', __name__)
 def upload():
     file: FileStorage = request.files['file']
     file_size = request.form['size']
-    save_file(file, file_size)
-    return render_template('upload.html')
+    archive = save_file(file, file_size)
+
+    ret = dict(
+        filename=archive.name,
+        size=archive.size,
+        url=archive.path,
+    )
+    return jsonify(ret)
 
 
 @disk.route('/disk')
@@ -75,4 +79,6 @@ def save_file(file: FileStorage, file_size):
             md5=f.md5,
             path=f.path,
         ))
-        File.create(form)
+        archive = File.create(form)
+
+    return archive

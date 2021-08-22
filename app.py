@@ -9,8 +9,8 @@ import settings
 def create_app():
     app = Flask(__name__)
     app.secret_key = settings.FLASK_SECRET_KEY
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{}:{}@localhost/webdisk?charset=utf8mb4'.format(
-        settings.MYSQL_USER, settings.MYSQL_PASSWORD
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{}:{}@localhost:{}/webdisk?charset=utf8mb4'.format(
+        settings.MYSQL_USER, settings.MYSQL_PASSWORD, settings.DB_PORT
     )
     db.init_app(app)
     app.register_blueprint(main_bp)

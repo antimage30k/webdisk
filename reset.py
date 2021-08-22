@@ -2,13 +2,13 @@ from models.base import db, User
 from sqlalchemy import create_engine
 
 from models.utils import UserRole
-from settings import MYSQL_USER, MYSQL_PASSWORD, DATABASE_NAME
+from settings import MYSQL_USER, MYSQL_PASSWORD, DATABASE_NAME, DB_PORT
 from app import create_app
 from models.utils import salted_password
 
 
 def reset_db():
-    uri = f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@localhost/?charset=utf8mb4'
+    uri = f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@localhost:{DB_PORT}/?charset=utf8mb4'
     engine = create_engine(uri,
                            encoding='utf-8',
                            pool_recycle=3600,
