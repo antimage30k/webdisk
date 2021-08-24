@@ -80,7 +80,7 @@ class User(Base):
 
 
 class File(Base):
-    name = Column(String(50), nullable=False)
+    name = Column(String(100), nullable=False)
     uuid = Column(String(36), nullable=False)
     type = Column(SmallInteger, default=FileType.UNKNOWN)
     md5 = Column(String(60), nullable=False, index=True)
