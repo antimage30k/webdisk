@@ -1,9 +1,13 @@
+from functools import wraps
+
 from flask import session, redirect
 
 from models.base import User
-from functools import wraps
-
 from models.utils import UserRole
+
+
+def current_user_id():
+    return session.get('user_id', -1)
 
 
 def current_user():
@@ -23,6 +27,7 @@ def login_required(func):
             return redirect('/login')
         else:
             func(*args, **kwargs)
+
     return _wrapper
 
 
@@ -34,4 +39,5 @@ def admin_required(func):
             return redirect('/login')
         else:
             func(*args, **kwargs)
+
     return _wrapper

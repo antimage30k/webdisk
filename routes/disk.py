@@ -1,12 +1,13 @@
-from flask import render_template, redirect, abort, send_from_directory, Blueprint, request, jsonify
-from hashlib import md5
 import os
+from hashlib import md5
+
+from flask import render_template, abort, Blueprint, request, jsonify, Response
 from werkzeug.datastructures import FileStorage
 
-from models.utils import FileShare, UserRole
-from routes import current_user
 from disk.file import get_uuid
 from models.base import File
+from models.utils import FileShare, UserRole
+from routes import current_user, current_user_id
 
 disk = Blueprint('disk', __name__)
 
@@ -33,7 +34,7 @@ def index():
     elif u.role == UserRole.ADMIN:
         files = File.get_list()
     else:
-        files = File.get_file_list(u.id)
+        files = File.get_list_not_admin(u.id)
     return render_template('upload.html', files=files)
 
 
@@ -52,7 +53,7 @@ def save_file(file: FileStorage, file_size):
     form = dict(
         name=file.filename,
         size=file_size,
-        upload_user=1,
+        upload_user=current_user_id(),
     )
 
     # 用md5值判断文件是否已存在
@@ -74,6 +75,9 @@ def save_file(file: FileStorage, file_size):
 
     # 文件已存在，新建数据库条目，但不用存储文件
     else:
+        if f.upload_user == current_user_id():
+            abort(Response('文件已存在'))
+
         form.update(dict(
             uuid=f.uuid,
             md5=f.md5,

@@ -98,6 +98,6 @@ class File(Base):
         return None
 
     @classmethod
-    def get_file_list(cls, u_id):
+    def get_list_not_admin(cls, u_id):
         fs = cls.query.filter(or_(cls.upload_user == u_id, cls.share < FileShare.EXCLUSIVE)).all()
         return fs
