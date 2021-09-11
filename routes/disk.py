@@ -7,7 +7,7 @@ from werkzeug.datastructures import FileStorage
 from disk.file import get_uuid
 from models.base import File
 from models.utils import FileShare, UserRole
-from routes import current_user, current_user_id
+from routes import current_user, guest
 
 disk = Blueprint('disk', __name__)
 
@@ -50,10 +50,13 @@ def get_file_storage_md5(file: FileStorage):
 
 
 def save_file(file: FileStorage, file_size):
+    u = current_user()
+    uid = u.id
+
     form = dict(
         name=file.filename,
         size=file_size,
-        upload_user=current_user_id(),
+        upload_user=uid,
     )
 
     # 用md5值判断文件是否已存在
@@ -75,7 +78,7 @@ def save_file(file: FileStorage, file_size):
 
     # 文件已存在，新建数据库条目，但不用存储文件
     else:
-        if f.upload_user == current_user_id():
+        if f.upload_user == uid:
             abort(Response('文件已存在'))
 
         form.update(dict(
@@ -86,3 +89,23 @@ def save_file(file: FileStorage, file_size):
         archive = File.create(form)
 
     return archive
+
+
+@disk.route('/delete/<file_id>', methods=['delete'])
+def delete(file_id):
+    u = current_user()
+    f: File = File.get(id=file_id)
+
+    if u == guest:
+        abort(401)
+
+    if (not u.isadmin) and (f.upload_user != u.id):  # 不是该用户上传的文件
+        abort(401)
+
+    files = File.get_list(md5=f.md5)
+    if len(files) == 1:  # 只有该用户拥有，删除实体文件
+        f.remove()
+    else:
+        f.delete()
+
+    return jsonify(f'deleted {f.name}')

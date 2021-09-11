@@ -16,6 +16,7 @@ DB_PORT = _get('DB_PORT', 3306)
 
 DATABASE_NAME = 'webdisk'
 REDIS_HOST = ''
+GUEST_NAME = '游客'
 
 BASE_FILE_PATH = _get('BASE_FILE_PATH', r'H:\images')
 

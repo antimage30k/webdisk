@@ -1,5 +1,6 @@
 import datetime
 import logging
+import os
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, DateTime, String, SmallInteger, or_
@@ -78,6 +79,10 @@ class User(Base):
             return True
         return False
 
+    @property
+    def is_admin(self):
+        return self.role == UserRole.ADMIN
+
 
 class File(Base):
     name = Column(String(100), nullable=False)
@@ -101,3 +106,7 @@ class File(Base):
     def get_list_not_admin(cls, u_id):
         fs = cls.query.filter(or_(cls.upload_user == u_id, cls.share < FileShare.EXCLUSIVE)).all()
         return fs
+
+    def remove(self):
+        os.remove(self.path)
+        self.delete()

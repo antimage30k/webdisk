@@ -4,17 +4,20 @@ from flask import session, redirect
 
 from models.base import User
 from models.utils import UserRole
+from settings import GUEST_NAME
 
 
 def current_user_id():
-    return session.get('user_id', -1)
+    u = current_user()
+    return u.id
 
 
 def current_user():
     user_id = session.get('user_id', -1)
     if user_id == -1:
-        return None
-    u = User.get(id=user_id)
+        return guest
+
+    u = User.get(id=user_id) or guest
 
     return u
 
@@ -41,3 +44,23 @@ def admin_required(func):
             func(*args, **kwargs)
 
     return _wrapper
+
+
+class Guest:
+    _instance = []
+
+    def __new__(cls):
+        if len(cls._instance) == 0:
+            _guest = super().__new__(cls)
+            cls._instance.append(_guest)
+            return _guest
+        else:
+            return cls._instance[0]
+
+    def __init__(self):
+        self.id = -1
+        self.name = GUEST_NAME
+        self.role = UserRole.GUEST
+
+
+guest = Guest()
