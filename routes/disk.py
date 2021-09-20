@@ -29,7 +29,7 @@ def upload():
 @disk.route('/disk')
 def index():
     u = current_user()
-    if u is None:
+    if u is guest:
         files = File.get_list(share=FileShare.PUBLIC)
     elif u.role == UserRole.ADMIN:
         files = File.get_list()
