@@ -9,7 +9,7 @@
     {% for f in files %}
         <div class="class-file">
             <p>
-                {{ f.name }} | {{ f.size }} | <a href="{{ f.path }}" download="{{ f.name }}">下载</a>
+              {{ f.created_time }}  | {{ f.name }} | {{ f.readable_size }} | <a href="{{ f.url }}" download="{{ f.name }}">下载</a>
             </p>
         </div>
     {% endfor %}
@@ -46,10 +46,10 @@
     {#    console.log(size)#}
     {#    sizeInput.value = size#}
 
-    var fileTempalate = function (filename, size, url) {
+    var fileTempalate = function (time, filename, size, url) {
         return `
         <div class="class-file-cell">
-            <span>${filename} ${size} ${url}</span>
+            <span>${time} | ${filename} | ${size} | <a href="${url}" download="${filename}">下载</a></span>
         </div>
     `
     }
@@ -90,7 +90,7 @@
 
     var callback = function (message) {
         log(message);
-        var fileCell = fileTempalate(message.filename, message.size, message.url)
+        var fileCell = fileTempalate(message.time, message.filename, message.size, message.url)
         var fileCells = e('.file-cells')
         fileCells.insertAdjacentHTML('beforeend',fileCell)
     }
@@ -103,7 +103,7 @@
         var data = {
             "file": file,
         }
-        ajax("POST", '/upload', data, callback);
+        ajax("POST", '/disk/upload', data, callback);
     }
 
 </script>

@@ -7,6 +7,14 @@ from models.utils import UserRole
 from settings import GUEST_NAME
 
 
+def escape_filename(filename):
+    filename = filename[:100]
+    illegal = '/\:*?"<>|'
+    trans = '_________'
+    table = str.maketrans(illegal, trans)
+    return filename.translate(table)
+
+
 def current_user_id():
     u = current_user()
     return u.id

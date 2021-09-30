@@ -7,7 +7,7 @@ from werkzeug.datastructures import FileStorage
 from disk.file import get_uuid
 from models.base import File
 from models.utils import FileShare, UserRole
-from routes import current_user, guest
+from routes import current_user, guest, escape_filename
 
 disk = Blueprint('disk', __name__)
 
@@ -19,14 +19,15 @@ def upload():
     archive = save_file(file, file_size)
 
     ret = dict(
+        time=str(archive.created_time),
         filename=archive.name,
-        size=archive.size,
-        url=archive.path,
+        size=archive.readable_size,
+        url=archive.url,
     )
     return jsonify(ret)
 
 
-@disk.route('/disk')
+@disk.route('/')
 def index():
     u = current_user()
     if u is guest:
@@ -54,7 +55,7 @@ def save_file(file: FileStorage, file_size):
     uid = u.id
 
     form = dict(
-        name=file.filename,
+        name=escape_filename(file.filename),
         size=file_size,
         upload_user=uid,
     )

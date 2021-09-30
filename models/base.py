@@ -5,7 +5,8 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, DateTime, String, SmallInteger, or_
 
-from models.utils import UserRole, salted_password, FileType, FileShare
+from models.utils import UserRole, salted_password, FileType, FileShare, get_readable_size
+from settings import BASE_FILE_PATH, DOWNLOAD_URL_PREFIX
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +102,14 @@ class File(Base):
         if u is not None:
             return u.name
         return None
+
+    @property
+    def url(self):
+        return DOWNLOAD_URL_PREFIX + self.path[len(BASE_FILE_PATH):]
+
+    @property
+    def readable_size(self):
+        return get_readable_size(self.size)
 
     @classmethod
     def get_list_not_admin(cls, u_id):

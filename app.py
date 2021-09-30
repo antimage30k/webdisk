@@ -14,7 +14,7 @@ def create_app():
     )
     db.init_app(app)
     app.register_blueprint(main_bp)
-    app.register_blueprint(disk_bp)
+    app.register_blueprint(disk_bp, url_prefix='/disk')
     return app
 
 
