@@ -22,7 +22,7 @@ apt install python3-pip
 python3 -m pip install --upgrade pip
 pip3 install --upgrade setuptools
 apt-get install -y git supervisor nginx python3-pip mysql-server redis-server
-pip3 install jinja2 flask gevent gunicorn pymysql flask_sqlalchemy redis
+pip3 install jinja2 flask gevent gunicorn pymysql flask_sqlalchemy redis flask-cors
 
 # 删除测试用户和测试数据库
 # 删除测试用户和测试数据库并限制关闭公网访问

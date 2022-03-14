@@ -25,5 +25,5 @@ def get_uuid():
     _dir = os.path.join(BASE_FILE_PATH, _uuid[0])
     if not os.path.exists(_dir):
         os.makedirs(_dir)
-    return _uuid, _dir
+    return _uuid
 

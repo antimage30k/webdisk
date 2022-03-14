@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from models.base import db
 from routes.main import main as main_bp
@@ -8,6 +9,7 @@ import settings
 
 def create_app():
     app = Flask(__name__)
+    CORS(app, supports_credentials=True)
     app.secret_key = settings.FLASK_SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{}:{}@localhost:{}/webdisk?charset=utf8mb4'.format(
         settings.MYSQL_USER, settings.MYSQL_PASSWORD, settings.DB_PORT

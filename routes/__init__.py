@@ -30,6 +30,14 @@ def current_user():
     return u
 
 
+def get_suffix(filename):
+    parts = filename.rsplit('.', 1)
+    if len(parts) == 2:
+        return '.' + parts[1]
+    else:
+        return ''
+
+
 def login_required(func):
     @wraps(func)
     def _wrapper(*args, **kwargs):

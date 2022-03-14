@@ -7,7 +7,7 @@ server {
     }
 
     location / {
-        rewrite ^.*$ /disk redirect;
+        rewrite ^.*$ /disk/index redirect;
     }
 
     location /download {

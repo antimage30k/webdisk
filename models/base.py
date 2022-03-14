@@ -117,5 +117,20 @@ class File(Base):
         return fs
 
     def remove(self):
-        os.remove(self.path)
+        try:
+            os.remove(os.path.join(BASE_FILE_PATH, self.path))
+        except Exception:
+            pass
         self.delete()
+
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            uuid=self.uuid,
+            type=self.type,
+            path=self.path,
+            size=self.readable_size,
+            uploader=self.upload_user,
+            create_time=self.created_time.strftime("%Y-%m-%d %H:%M:%S"),
+        )

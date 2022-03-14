@@ -1,13 +1,14 @@
 import os
 from hashlib import md5
 
-from flask import render_template, abort, Blueprint, request, jsonify, Response
+from flask import abort, Blueprint, request, jsonify, Response, render_template, send_file
 from werkzeug.datastructures import FileStorage
 
 from disk.file import get_uuid
 from models.base import File
 from models.utils import FileShare, UserRole
-from routes import current_user, guest, escape_filename
+from routes import current_user, guest, escape_filename, get_suffix
+from settings import BASE_FILE_PATH
 
 disk = Blueprint('disk', __name__)
 
@@ -27,6 +28,13 @@ def upload():
     return jsonify(ret)
 
 
+@disk.route('/upload/multi', methods=['POST'])
+def upload_multi():
+    file: FileStorage = request.files['file']
+    archive = save_file(file)
+    return jsonify(archive.to_dict())
+
+
 @disk.route('/')
 def index():
     u = current_user()
@@ -36,7 +44,51 @@ def index():
         files = File.get_list()
     else:
         files = File.get_list_not_admin(u.id)
+    result = [f.to_dict() for f in files]
+    return jsonify(result)
+
+
+@disk.route('/index')
+def index_web():
+    u = current_user()
+    if u is guest:
+        files = File.get_list(share=FileShare.PUBLIC)
+    elif u.role == UserRole.ADMIN:
+        files = File.get_list()
+    else:
+        files = File.get_list_not_admin(u.id)
+
     return render_template('upload.html', files=files)
+
+
+@disk.route('/delete/<file_id>', methods=['delete'])
+def delete(file_id):
+    u = current_user()
+    f: File = File.get(id=file_id)
+
+    # if u == guest:
+    #     abort(401)
+    #
+    # if (not u.isadmin) and (f.upload_user != u.id):  # 不是该用户上传的文件
+    #     abort(401)
+
+    files = File.get_list(md5=f.md5)
+    if len(files) == 1:  # 只有该用户拥有，删除实体文件
+        f.remove()
+    else:
+        f.delete()
+
+    return jsonify(dict(
+        id=f.id,
+        uuid=f.uuid,
+        name=f.name,
+    ))
+
+
+@disk.route("/download/<file_id>", methods=['GET'])
+def download(file_id):
+    f: File = File.get(id=file_id)
+    return send_file(os.path.join(BASE_FILE_PATH, f.path), as_attachment=True, attachment_filename=f.name)
 
 
 def get_file_storage_md5(file: FileStorage):
@@ -50,7 +102,7 @@ def get_file_storage_md5(file: FileStorage):
     return _md5.hexdigest()
 
 
-def save_file(file: FileStorage, file_size):
+def save_file(file: FileStorage, file_size=None):
     u = current_user()
     uid = u.id
 
@@ -67,46 +119,31 @@ def save_file(file: FileStorage, file_size):
 
     # 文件不存在, 存储
     if f is None:
-        suffix = file.filename.rsplit('.', 1)[1]
-        _uuid, _dir = get_uuid()
+        suffix = get_suffix(file.filename)
+        _uuid = get_uuid()
+        path = os.path.join(_uuid[0], _uuid + suffix)
         form.update(dict(
             uuid=_uuid,
             md5=_md5,
-            path=os.path.join(_dir, _uuid + '.' + suffix),
+            path=path,
         ))
+        absolute_path = os.path.join(BASE_FILE_PATH, path)
+        file.save(absolute_path)
+        if file_size is None:
+            form.update(size=os.path.getsize(absolute_path))
         archive = File.create(form)
-        file.save(archive.path)
 
     # 文件已存在，新建数据库条目，但不用存储文件
     else:
         if f.upload_user == uid:
-            abort(Response('文件已存在'))
+            abort(Response("File exists"))
 
         form.update(dict(
             uuid=f.uuid,
             md5=f.md5,
             path=f.path,
+            size=f.size,
         ))
         archive = File.create(form)
 
     return archive
-
-
-@disk.route('/delete/<file_id>', methods=['delete'])
-def delete(file_id):
-    u = current_user()
-    f: File = File.get(id=file_id)
-
-    if u == guest:
-        abort(401)
-
-    if (not u.isadmin) and (f.upload_user != u.id):  # 不是该用户上传的文件
-        abort(401)
-
-    files = File.get_list(md5=f.md5)
-    if len(files) == 1:  # 只有该用户拥有，删除实体文件
-        f.remove()
-    else:
-        f.delete()
-
-    return jsonify(f'deleted {f.name}')
