@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request
+from flask import Blueprint, redirect, render_template, request, session, jsonify
 
 from models.base import User
 
@@ -12,7 +12,14 @@ def index():
 
 @main.route('/login', methods=['POST'])
 def login():
-    pass
+    username = request.json['username']
+    password = request.json['password']
+    u = User.login(username, password)
+    if u is None:
+        return jsonify(dict(message="Login Failed"))
+    session['user_id'] = u.id
+    session.permanent = True
+    return jsonify(dict(message="Login Succeeded"))
 
 
 @main.route('/register', methods=['POST', "GET"])

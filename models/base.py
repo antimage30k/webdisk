@@ -74,6 +74,10 @@ class User(Base):
             return False
 
     @classmethod
+    def login(cls, name, password):
+        return cls.get(name=name, password=salted_password(password))
+
+    @classmethod
     def authenticate(cls, name, password):
         u = cls.get(name=name, password=salted_password(password))
         if u is not None:
@@ -132,5 +136,5 @@ class File(Base):
             path=self.path,
             size=self.readable_size,
             uploader=self.upload_user,
-            create_time=self.created_time.strftime("%Y-%m-%d %H:%M:%S"),
+            create_time=self.created_time.strftime("%Y-%m-%d %H:%M:%S") + ' UTC',
         )
