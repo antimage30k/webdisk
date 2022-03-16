@@ -12,9 +12,9 @@ def index():
 
 @main.route('/login', methods=['POST'])
 def login():
-    username = request.json['username']
+    name = request.json['username']
     password = request.json['password']
-    u = User.login(username, password)
+    u = User.login(name, password)
     if u is None:
         return jsonify(dict(message="Login Failed"))
     session['user_id'] = u.id
@@ -22,14 +22,11 @@ def login():
     return jsonify(dict(message="Login Succeeded"))
 
 
-@main.route('/register', methods=['POST', "GET"])
+@main.route('/register', methods=['POST'])
 def register():
-    if request.method == 'GET':
-        return render_template('/')
-    if request.method == "POST":
-        form = request.form
-        result = User.register(name=form['name'], password=form['password'])
-        if result:
-            redirect('/login')
-        else:
-            redirect('/register')
+    json = request.json
+    result = User.register(name=json['username'], password=json['password'])
+    if result:
+        return jsonify(dict(message="Register Succeeded"))
+    else:
+        return jsonify(dict(message=""))
