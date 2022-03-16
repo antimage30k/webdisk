@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 
+from exception_handler import handle
 from models.base import db
 from routes.main import main as main_bp
 from routes.disk import disk as disk_bp
@@ -17,6 +18,7 @@ def create_app():
     db.init_app(app)
     app.register_blueprint(main_bp)
     app.register_blueprint(disk_bp, url_prefix='/disk')
+    app.errorhandler(Exception)(handle)
     return app
 
 

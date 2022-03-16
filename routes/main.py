@@ -1,5 +1,7 @@
-from flask import Blueprint, redirect, render_template, request, session, jsonify
+from flask import Blueprint, render_template, request, session, jsonify
+from werkzeug.exceptions import HTTPException
 
+from exception_handler import APIException
 from models.base import User
 
 main = Blueprint('main', __name__)
@@ -16,7 +18,7 @@ def login():
     password = request.json['password']
     u = User.login(name, password)
     if u is None:
-        return jsonify(dict(message="Login Failed"))
+        raise APIException("invalid", 501, "001")
     session['user_id'] = u.id
     session.permanent = True
     return jsonify(dict(message="Login Succeeded"))
