@@ -1,11 +1,11 @@
 from flask import Flask
 from flask_cors import CORS
 
+import settings
 from exception_handler import handle
 from models.base import db
-from routes.main import main as main_bp
 from routes.disk import disk as disk_bp
-import settings
+from routes.main import main as main_bp
 
 
 def create_app():

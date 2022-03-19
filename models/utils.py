@@ -1,3 +1,4 @@
+import time
 from hashlib import sha256
 
 from settings import SALT
@@ -44,3 +45,7 @@ def get_readable_size(size: int):
     if gb < 1024:
         return '{:.2f}GB'.format(gb)
     return size
+
+
+def current_time():
+    return int(time.time())

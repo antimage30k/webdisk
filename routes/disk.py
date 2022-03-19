@@ -7,7 +7,7 @@ from werkzeug.datastructures import FileStorage
 from disk.file import get_uuid
 from models.base import File
 from models.utils import FileShare, UserRole
-from routes import current_user, guest, escape_filename, get_suffix
+from routes import current_user, guest, escape_filename
 from settings import BASE_FILE_PATH
 
 disk = Blueprint('disk', __name__)
@@ -119,9 +119,8 @@ def save_file(file: FileStorage, file_size=None):
 
     # 文件不存在, 存储
     if f is None:
-        suffix = get_suffix(file.filename)
         _uuid = get_uuid()
-        path = os.path.join(_uuid[0], _uuid + suffix)
+        path = os.path.join(_uuid[0], _uuid)
         form.update(dict(
             uuid=_uuid,
             md5=_md5,

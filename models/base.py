@@ -1,11 +1,10 @@
-import datetime
 import logging
 import os
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, DateTime, String, SmallInteger, or_
+from sqlalchemy import Column, Integer, String, SmallInteger, or_
 
-from models.utils import UserRole, salted_password, FileType, FileShare, get_readable_size
+from models.utils import UserRole, salted_password, FileType, FileShare, get_readable_size, current_time
 from settings import BASE_FILE_PATH, DOWNLOAD_URL_PREFIX
 
 logger = logging.getLogger(__name__)
@@ -17,7 +16,7 @@ class Base(db.Model):
     __abstract__ = True
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
-    created_time = Column(DateTime, default=datetime.datetime.utcnow)
+    created_time = Column(Integer, default=current_time)
 
     @classmethod
     def create(cls, data):
@@ -136,5 +135,5 @@ class File(Base):
             path=self.path,
             size=self.readable_size,
             uploader=self.upload_user,
-            create_time=self.created_time.strftime("%Y-%m-%d %H:%M:%S") + ' UTC',
+            create_time=self.created_time,
         )
