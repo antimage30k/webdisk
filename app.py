@@ -16,8 +16,8 @@ def create_app():
         settings.MYSQL_USER, settings.MYSQL_PASSWORD, settings.DB_PORT
     )
     db.init_app(app)
-    app.register_blueprint(main_bp)
-    app.register_blueprint(disk_bp, url_prefix='/disk')
+    app.register_blueprint(main_bp, url_prefix='/api')
+    app.register_blueprint(disk_bp, url_prefix='/api/disk')
     app.errorhandler(Exception)(handle)
     return app
 

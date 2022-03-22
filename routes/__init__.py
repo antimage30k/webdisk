@@ -65,18 +65,19 @@ def admin_required(func):
 class Guest:
     _instance = []
 
+    guest_config = dict(
+        id=-1,
+        name=GUEST_NAME,
+        role=UserRole.GUEST,
+    )
+
     def __new__(cls):
         if len(cls._instance) == 0:
-            _guest = super().__new__(cls)
+            _guest = User(**cls.guest_config)
             cls._instance.append(_guest)
             return _guest
         else:
             return cls._instance[0]
-
-    def __init__(self):
-        self.id = -1
-        self.name = GUEST_NAME
-        self.role = UserRole.GUEST
 
 
 guest = Guest()

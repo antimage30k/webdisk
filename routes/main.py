@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, session, jsonify
-from werkzeug.exceptions import HTTPException
 
 from exception_handler import APIException
 from models.base import User
+from routes import current_user
 
 main = Blueprint('main', __name__)
 
@@ -16,12 +16,12 @@ def index():
 def login():
     name = request.json['username']
     password = request.json['password']
-    u = User.login(name, password)
+    u: User = User.login(name, password)
     if u is None:
         raise APIException("invalid", 501, "001")
     session['user_id'] = u.id
     session.permanent = True
-    return jsonify(dict(message="Login Succeeded"))
+    return jsonify(dict(message="Login Succeeded", data=u.to_dict()))
 
 
 @main.route('/register', methods=['POST'])
@@ -32,3 +32,9 @@ def register():
         return jsonify(dict(message="Register Succeeded"))
     else:
         return jsonify(dict(message=""))
+
+
+@main.route('/current_user', methods=['GET'])
+def get_current_user():
+    u: User = current_user()
+    return jsonify(u.to_dict())

@@ -87,6 +87,14 @@ class User(Base):
     def is_admin(self):
         return self.role == UserRole.ADMIN
 
+    def to_dict(self):
+        return dict(
+            userId=self.id,
+            isAdmin=self.is_admin,
+            username=self.name,
+            role=self.role,
+        )
+
 
 class File(Base):
     name = Column(String(100), nullable=False)
