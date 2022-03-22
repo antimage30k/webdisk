@@ -63,6 +63,7 @@ class APIException(HTTPException):
 
 
 class Error:
-    login_error = APIException("")
-
-
+    login_error = APIException(msg="Wrong Username or Password.")
+    not_authorized = APIException(msg="Not Authorized.")
+    username_occupied = APIException(msg='This username has been occupied.')
+    registration_failed = APIException(msg='Registration Failed.')
