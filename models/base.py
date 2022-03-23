@@ -62,6 +62,7 @@ class User(Base):
     name = Column(String(20), nullable=False, unique=True)
     password = Column(String(64), nullable=False)
     role = Column(SmallInteger, default=UserRole.NORMAL)
+    avatar = Column(String(256), nullable=True)
 
     @classmethod
     def register(cls, name, password):
@@ -93,6 +94,7 @@ class User(Base):
             isAdmin=self.is_admin,
             username=self.name,
             role=self.role,
+            avatar=self.avatar,
         )
 
 
