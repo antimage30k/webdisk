@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, session, jsonify
 
-from exception_handler import APIException, Error
+from exception_handler import Error
 from models.base import User
-from routes import current_user
+from routes import current_user, guest
 
 main = Blueprint('main', __name__)
 
@@ -22,6 +22,12 @@ def login():
     session['user_id'] = u.id
     session.permanent = True
     return jsonify(dict(message="Login Succeeded", data=u.to_dict()))
+
+
+@main.route('/logout', methods=['DELETE'])
+def logout():
+    session.pop('user_id')
+    return jsonify(guest.to_dict())
 
 
 @main.route('/register', methods=['POST'])

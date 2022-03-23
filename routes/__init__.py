@@ -3,7 +3,7 @@ from functools import wraps
 from flask import session, redirect
 
 from models.base import User
-from models.utils import UserRole
+from models.utils import UserRole, DefaultUserId
 from settings import GUEST_NAME
 
 
@@ -21,8 +21,8 @@ def current_user_id():
 
 
 def current_user():
-    user_id = session.get('user_id', -1)
-    if user_id == -1:
+    user_id = session.get('user_id', DefaultUserId.GUEST)
+    if user_id == DefaultUserId.GUEST:
         return guest
 
     u = User.get(id=user_id) or guest
@@ -66,7 +66,7 @@ class Guest:
     _instance = []
 
     guest_config = dict(
-        id=-1,
+        id=DefaultUserId.GUEST,
         name=GUEST_NAME,
         role=UserRole.GUEST,
     )

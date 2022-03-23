@@ -11,6 +11,11 @@ class UserRole:
     GUEST = 4
 
 
+class DefaultUserId:
+    ADMIN = 1
+    GUEST = -1
+
+
 class FileType:
     UNKNOWN = 0
     PICTURE = 1
