@@ -2,6 +2,7 @@ from functools import wraps
 
 from flask import session, redirect
 
+from exception_handler import Error
 from models.base import User
 from models.utils import UserRole, DefaultUserId
 from settings import GUEST_NAME
@@ -43,7 +44,7 @@ def login_required(func):
     def _wrapper(*args, **kwargs):
         u = current_user()
         if u is None:
-            return redirect('/login')
+            raise Error.not_authorized
         else:
             func(*args, **kwargs)
 
@@ -55,7 +56,7 @@ def admin_required(func):
     def _wrapper(*args, **kwargs):
         u: User = current_user()
         if u.role != UserRole.ADMIN:
-            return redirect('/login')
+            raise Error.not_authorized
         else:
             func(*args, **kwargs)
 

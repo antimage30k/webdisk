@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, session, jsonify
 
 from exception_handler import Error
 from models.base import User
-from routes import current_user, guest
+from routes import current_user, guest, login_required
 
 main = Blueprint('main', __name__)
 
@@ -44,3 +44,18 @@ def register():
 def get_current_user():
     u: User = current_user()
     return jsonify(u.to_dict())
+
+
+@main.route('/avatar/set', methods=['POST'])
+@login_required
+def set_avatar():
+    u: User = current_user()
+    avatar: str = request.json['avatar']
+    u.update(avatar=avatar)
+    return jsonify(u.to_dict())
+
+
+@main.route('/avatar/upload', methods=['POST'])
+@login_required
+def upload_avatar():
+    return

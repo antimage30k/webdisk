@@ -5,15 +5,17 @@ from flask import abort, Blueprint, request, jsonify, Response, render_template,
 from werkzeug.datastructures import FileStorage
 
 from disk.file import get_uuid
+from exception_handler import Error
 from models.base import File
 from models.utils import FileShare, UserRole
-from routes import current_user, guest, escape_filename
+from routes import current_user, guest, escape_filename, login_required
 from settings import BASE_FILE_PATH
 
 disk = Blueprint('disk', __name__)
 
 
 @disk.route('/upload', methods=['POST'])
+@login_required
 def upload():
     file: FileStorage = request.files['file']
     file_size = request.form['size']
@@ -29,6 +31,7 @@ def upload():
 
 
 @disk.route('/upload/multi', methods=['POST'])
+@login_required
 def upload_multi():
     file: FileStorage = request.files['file']
     archive = save_file(file)
@@ -66,11 +69,11 @@ def delete(file_id):
     u = current_user()
     f: File = File.get(id=file_id)
 
-    # if u == guest:
-    #     abort(401)
-    #
-    # if (not u.isadmin) and (f.upload_user != u.id):  # 不是该用户上传的文件
-    #     abort(401)
+    if u is guest:
+        raise Error.not_authorized
+
+    if (not u.isadmin) and (f.upload_user != u.id):  # 不是该用户上传的文件
+        raise Error.not_authorized
 
     files = File.get_list(md5=f.md5)
     if len(files) == 1:  # 只有该用户拥有，删除实体文件
