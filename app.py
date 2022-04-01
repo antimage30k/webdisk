@@ -1,5 +1,4 @@
 from flask import Flask
-from flask_cors import CORS
 
 import settings
 from exception_handler import handle
@@ -8,13 +7,17 @@ from routes.disk import disk as disk_bp
 from routes.main import main as main_bp
 
 
+class AppConfig:
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@localhost:{}/webdisk?charset=utf8mb4'.format(
+        settings.MYSQL_USER, settings.MYSQL_PASSWORD, settings.DB_PORT)
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_COMMIT_TEARDOWN = True
+
+
 def create_app():
     app = Flask(__name__)
-    CORS(app, supports_credentials=True)
     app.secret_key = settings.FLASK_SECRET_KEY
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{}:{}@localhost:{}/webdisk?charset=utf8mb4'.format(
-        settings.MYSQL_USER, settings.MYSQL_PASSWORD, settings.DB_PORT
-    )
+    app.config.from_object(AppConfig)
     db.init_app(app)
     app.register_blueprint(main_bp, url_prefix='/api')
     app.register_blueprint(disk_bp, url_prefix='/api/disk')

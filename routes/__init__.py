@@ -46,7 +46,7 @@ def login_required(func):
         if u is None:
             raise Error.not_authorized
         else:
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
 
     return _wrapper
 
@@ -58,7 +58,7 @@ def admin_required(func):
         if u.role != UserRole.ADMIN:
             raise Error.not_authorized
         else:
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
 
     return _wrapper
 

@@ -6,7 +6,7 @@ from werkzeug.datastructures import FileStorage
 
 from disk.file import get_uuid
 from exception_handler import Error
-from models.base import File
+from models.base import File, User
 from models.utils import FileShare, UserRole
 from routes import current_user, guest, escape_filename, login_required
 from settings import BASE_FILE_PATH
@@ -66,13 +66,13 @@ def index_web():
 
 @disk.route('/delete/<file_id>', methods=['delete'])
 def delete(file_id):
-    u = current_user()
+    u: User = current_user()
     f: File = File.get(id=file_id)
 
     if u is guest:
         raise Error.not_authorized
 
-    if (not u.isadmin) and (f.upload_user != u.id):  # 不是该用户上传的文件
+    if (not u.is_admin) and (f.upload_user != u.id):  # 不是该用户上传的文件
         raise Error.not_authorized
 
     files = File.get_list(md5=f.md5)
