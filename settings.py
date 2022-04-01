@@ -20,3 +20,5 @@ GUEST_NAME = '游客'
 
 BASE_FILE_PATH = _get('BASE_FILE_PATH', r'/home/webdisk')
 DOWNLOAD_URL_PREFIX = '/download'
+
+ADMIN_PASS = _get('ADMIN_PASS', 'admin')
