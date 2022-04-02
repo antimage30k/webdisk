@@ -14,6 +14,6 @@ python3 manager.py db upgrade
 python3 manager.py add_admin
 
 # 重启服务器
-service supervisor restart
+service supervisor start
 
 tail -f /dev/null
