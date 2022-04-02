@@ -6,6 +6,7 @@ cp /var/www/webdisk/deploy/webdisk.conf /etc/supervisor/conf.d/webdisk.conf
 
 # 初始化
 cd /var/www/webdisk
+python3 manager.py create_db
 python3 manager.py db init || echo 'not first deploy'
 python3 manager.py db migrate
 python3 manager.py db upgrade
