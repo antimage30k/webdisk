@@ -1,0 +1,19 @@
+version: '3.4'
+networks:
+  bridge_network:
+    external: true
+
+services:
+  redis:
+    container_name: redis
+    restart: always
+    privileged: true
+    networks:
+      - bridge_network
+    image: "redis:6.2"
+    ports:
+      - "6379:6379"
+    volumes:
+      - /home/redis/data:/data
+      - /etc/localtime:/etc/localtime
+    command: redis-server --port 6379 --requirepass MzhhMzU4NDQzNzU  --appendonly no

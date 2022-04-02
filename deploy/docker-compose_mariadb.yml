@@ -1,0 +1,24 @@
+version: '3.4'
+networks:
+  bridge_network:
+    external: true
+
+services:
+  mariadb:
+    container_name: mariadb
+    restart: always
+    networks:
+      - bridge_network
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - LANG=C.UTF-8
+    image: "mariadb:10.7"
+    privileged: true
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    ports:
+      - "3306:3306"
+    volumes:
+#      - ./mysql/init:/docker-entrypoint-initdb.d/
+      - /home/mysql/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - /home/mysql/data:/var/lib/mysql
+      - /etc/localtime:/etc/localtime

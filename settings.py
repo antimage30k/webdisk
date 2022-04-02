@@ -1,10 +1,17 @@
-def _get(key, default):
-    try:
-        import config
-        return getattr(config, key, default)
-    except ImportError:
-        return default
+import os
 
+try:
+    import config
+
+
+    def _get(key, default):
+        return getattr(config, key, default)
+except ImportError as e:
+    config = None
+
+
+    def _get(key, default):
+        return os.environ.get(key, default)
 
 SALT = _get('SALT', '7LG*Pn$cQ%Cqk4')
 
