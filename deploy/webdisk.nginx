@@ -1,9 +1,9 @@
 server {
     client_max_body_size 4G;
-    listen 7777;
+    listen 80;
 
-    location /disk {
-        proxy_pass http://localhost:4000/disk;
+    location /api {
+        proxy_pass http://127.0.0.1:4000/api;
     }
 
     location / {
@@ -13,7 +13,4 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-#    location /download {
-#        alias /home/webdisk;
-#    }
 }
