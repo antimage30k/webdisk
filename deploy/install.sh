@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-cp -r ../ /var/www/webdisk/
-
-docker-compose up -f ./docker-compose.yml -d
+docker-compose -f ./docker-compose.yml up -d
 
 cp ./webdisk.nginx /etc/nginx/conf.d/webdisk.conf
 

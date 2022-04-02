@@ -16,5 +16,5 @@ RUN pip3 install --upgrade setuptools
 RUN apt-get install -y git supervisor
 RUN pip3 install flask==1.1.4 gevent gunicorn pymysql flask_sqlalchemy redis flask-script==2.0.6 flask_migrate==2.7.0
 
-# 启动时运行这个命令
-CMD ["/bin/bash"]
+COPY ./start.sh /home/
+ENTRYPOINT ["/home/start.sh"]

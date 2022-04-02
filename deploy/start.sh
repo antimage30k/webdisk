@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-set -ex
 
 chmod -R o+rwx /var/www/webdisk
 
-cp /var/www/webdisk/webdisk.conf /etc/supervisor/conf.d/webdisk.conf
+cp /var/www/webdisk/deploy/webdisk.conf /etc/supervisor/conf.d/webdisk.conf
 
 # 初始化
 cd /var/www/webdisk

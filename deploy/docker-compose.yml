@@ -2,18 +2,20 @@ version: '3.4'
 services:
   webdisk:
     container_name: webdisk
-    image: myubuntu:latest
+    image: webdisk:1.0
     volumes:
       - /var/www/webdisk/:/var/www/webdisk/
+      - /home/webdisk/:/home/webdisk/
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_PASSWORD=test
+      - DB_PORT=3306
+      - ADMIN_PASS=c59ykW*k2xm8&TS&
     ports:
       - 4000:4000
     privileged: true
     networks:
       - disknet
-    command: tail -f /dev/null
 
 networks:
   disknet:

@@ -16,4 +16,4 @@ services:
     volumes:
       - /home/redis/data:/data
       - /etc/localtime:/etc/localtime
-    command: redis-server --port 6379 --requirepass MzhhMzU4NDQzNzU  --appendonly no
+    command: redis-server --port 6379 --requirepass test  --appendonly no
