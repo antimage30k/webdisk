@@ -9,7 +9,7 @@ services:
     restart: always
     privileged: true
     networks:
-      - bridge_network
+      - bridge
     image: "redis:6.2"
     ports:
       - "6379:6379"
