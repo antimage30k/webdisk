@@ -1,6 +1,6 @@
 server {
     client_max_body_size 4G;
-    listen 80;
+    listen 7777;
 
     location /disk {
         proxy_pass http://localhost:4000/disk;
