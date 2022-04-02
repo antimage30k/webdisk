@@ -6,6 +6,7 @@ services:
     volumes:
       - /var/www/webdisk/:/var/www/webdisk/
       - /home/webdisk/:/home/webdisk/
+      - /var/log/:/var/log/
     restart: always
     environment:
       - MYSQL_PASSWORD=test
