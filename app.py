@@ -8,8 +8,8 @@ from routes.main import main as main_bp
 
 
 class AppConfig:
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@localhost:{}/webdisk?charset=utf8mb4'.format(
-        settings.MYSQL_USER, settings.MYSQL_PASSWORD, settings.DB_PORT)
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}:{}/webdisk?charset=utf8mb4'.format(
+        settings.MYSQL_USER, settings.MYSQL_PASSWORD,settings.DB_HOST, settings.DB_PORT)
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_COMMIT_TEARDOWN = True
 

@@ -19,6 +19,7 @@ FLASK_SECRET_KEY = _get('FLASK_SECRET_KEY', '7LG*Pn$cQ%Cqk4')
 
 MYSQL_PASSWORD = _get('MYSQL_PASSWORD', 'test')
 MYSQL_USER = _get('MYSQL_USER', 'root')
+DB_HOST = _get('DB_HOST', 'localhost')
 DB_PORT = _get('DB_PORT', 3306)
 
 DATABASE_NAME = 'webdisk'

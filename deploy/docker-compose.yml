@@ -9,6 +9,7 @@ services:
     restart: always
     environment:
       - MYSQL_PASSWORD=test
+      - DB_HOST=mariadb
       - DB_PORT=3306
       - ADMIN_PASS=c59ykW*k2xm8&TS&
     ports:
