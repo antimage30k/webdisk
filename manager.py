@@ -15,7 +15,8 @@ manager.add_command('db', MigrateCommand)
 
 @manager.command
 def create_db():
-    uri = f'mysql+pymysql://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/?charset=utf8mb4'
+    uri = f'mysql+pymysql://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@' \
+          f'{settings.DB_HOST}:{settings.DB_PORT}/?charset=utf8mb4'
     engine = create_engine(uri,
                            encoding='utf-8',
                            pool_recycle=3600,
