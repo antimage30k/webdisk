@@ -1,6 +1,6 @@
 version: '3.4'
 networks:
-  bridge:
+  disknet:
     external: true
 
 services:
@@ -9,7 +9,7 @@ services:
     restart: always
     privileged: true
     networks:
-      - bridge
+      - disknet
     image: "redis:6.2"
     ports:
       - "6379:6379"

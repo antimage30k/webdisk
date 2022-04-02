@@ -12,9 +12,9 @@ services:
       - 4000:4000
     privileged: true
     networks:
-      - bridge_network
+      - disknet
     command: tail -f /dev/null
 
 networks:
-  bridge_network:
+  disknet:
     external: true
