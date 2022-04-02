@@ -11,7 +11,7 @@ python3 manager.py db init || echo 'not first deploy'
 python3 manager.py db migrate
 python3 manager.py db upgrade
 
-python manager.py add_admin
+python3 manager.py add_admin
 
 # 重启服务器
 service supervisor restart
