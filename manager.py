@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask_migrate import Migrate, MigrateCommand
@@ -7,7 +8,11 @@ from sqlalchemy import create_engine
 import settings
 from models.base import db, User
 from models.utils import salted_password, UserRole
+from utils.logger import init_logging
 from wsgi import application
+
+init_logging()
+logger = logging.getLogger(__name__)
 
 manager = Manager(application)
 migrate = Migrate(application, db)
