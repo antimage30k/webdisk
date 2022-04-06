@@ -1,6 +1,9 @@
 import logging
 import os
 
+from utils.logger import init_logging
+
+init_logging()
 log = logging.getLogger(__name__)
 
 try:
