@@ -1,4 +1,7 @@
+import logging
 import os
+
+log = logging.getLogger(__name__)
 
 try:
     import config
@@ -21,6 +24,8 @@ MYSQL_PASSWORD = _get('MYSQL_PASSWORD', 'test')
 MYSQL_USER = _get('MYSQL_USER', 'root')
 DB_HOST = _get('DB_HOST', 'localhost')
 DB_PORT = _get('DB_PORT', 3306)
+
+log.info(os.environ)
 
 DATABASE_NAME = 'webdisk'
 REDIS_HOST = ''

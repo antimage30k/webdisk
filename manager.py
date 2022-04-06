@@ -1,3 +1,5 @@
+import os
+
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from sqlalchemy import create_engine
@@ -38,6 +40,21 @@ def add_admin():
         role=UserRole.ADMIN,
     )
     User.create(form)
+
+
+@manager.command
+def set_environ():
+    """
+    supervisor 有自己的环境变量，读不到docker 容器的environment
+    """
+    envs = []
+    for key, val in os.environ.items():
+        envs.append(f'{key}="{val}",')
+    if envs:
+        supervisor_env = 'environment=' + ''.join(envs)
+        with open('/etc/supervisor/conf.d/webdisk.conf', 'a') as f:
+            f.write('\n')
+            f.write(supervisor_env)
 
 
 if __name__ == '__main__':
