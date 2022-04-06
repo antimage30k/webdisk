@@ -1,7 +1,7 @@
 import os
 from hashlib import md5
 
-from flask import abort, Blueprint, request, jsonify, Response, render_template, send_file
+from flask import abort, Blueprint, request, jsonify, Response, send_file
 from werkzeug.datastructures import FileStorage
 
 from disk.file import get_uuid
@@ -49,19 +49,6 @@ def index():
         files = File.get_list_not_admin(u.id)
     result = [f.to_dict() for f in files]
     return jsonify(result)
-
-
-@disk.route('/index')
-def index_web():
-    u = current_user()
-    if u is guest:
-        files = File.get_list(share=FileShare.PUBLIC)
-    elif u.role == UserRole.ADMIN:
-        files = File.get_list()
-    else:
-        files = File.get_list_not_admin(u.id)
-
-    return render_template('upload.html', files=files)
 
 
 @disk.route('/delete/<file_id>', methods=['delete'])
