@@ -5,6 +5,7 @@ from exception_handler import handle
 from models.base import db
 from routes.disk import disk as disk_bp
 from routes.main import main as main_bp
+from utils.logger import init_logging
 
 
 class AppConfig:
@@ -15,6 +16,7 @@ class AppConfig:
 
 
 def create_app():
+    init_logging()
     app = Flask(__name__)
     app.secret_key = settings.FLASK_SECRET_KEY
     app.config.from_object(AppConfig)
