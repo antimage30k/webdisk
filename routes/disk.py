@@ -59,8 +59,7 @@ def delete(file_id):
     if u is guest:
         raise Error.not_authorized
 
-    if (not u.is_admin) and (f.upload_user != u.id):  # 不是该用户上传的文件
-        raise Error.not_authorized
+    _check_admin_or_uploader(u, f)
 
     files = File.get_list(md5=f.md5)
     if len(files) == 1:  # 只有该用户拥有，删除实体文件
@@ -79,6 +78,30 @@ def delete(file_id):
 def download(file_id):
     f: File = File.get(id=file_id)
     return send_file(os.path.join(BASE_FILE_PATH, f.path), as_attachment=True, attachment_filename=f.name)
+
+
+@disk.route('/publish', methods=['POST'])
+@login_required
+def publish():
+    file_id = request.json['id']
+    u: User = current_user()
+    f: File = File.get(id=file_id)
+    _check_admin_or_uploader(u, f)
+    f.share = FileShare.PUBLIC
+    f.save()
+    return jsonify(f.to_dict())
+
+
+@disk.route('/hide', methods=['POST'])
+@login_required
+def hide():
+    file_id = request.json['id']
+    u: User = current_user()
+    f: File = File.get(id=file_id)
+    _check_admin_or_uploader(u, f)
+    f.share = FileShare.EXCLUSIVE
+    f.save()
+    return jsonify(f.to_dict())
 
 
 def get_file_storage_md5(file: FileStorage):
@@ -136,3 +159,8 @@ def save_file(file: FileStorage, file_size=None):
         archive = File.create(form)
 
     return archive
+
+
+def _check_admin_or_uploader(u: User, f: File):
+    if (not u.is_admin) and (f.upload_user != u.id):  # 不是该用户上传的文件
+        raise Error.not_authorized

@@ -1,15 +1,10 @@
-from flask import Blueprint, render_template, request, session, jsonify
+from flask import Blueprint, request, session, jsonify
 
 from exception_handler import Error
 from models.base import User
 from routes import current_user, guest, login_required
 
 main = Blueprint('main', __name__)
-
-
-@main.route('/')
-def index():
-    return render_template('index.html')
 
 
 @main.route('/login', methods=['POST'])
@@ -46,7 +41,7 @@ def get_current_user():
     return jsonify(u.to_dict())
 
 
-@main.route('/avatar/set', methods=['POST'])
+@main.route('/avatar/set', methods=['PATCH'])
 @login_required
 def set_avatar():
     u: User = current_user()
