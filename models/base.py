@@ -104,7 +104,7 @@ class File(Base):
     type = Column(SmallInteger, default=FileType.UNKNOWN)
     md5 = Column(String(60), nullable=False, index=True)
     path = Column(String(72), nullable=False)
-    share = Column(SmallInteger, default=FileShare.PUBLIC)
+    share = Column(SmallInteger, default=FileShare.EXCLUSIVE)
     size = Column(Integer, nullable=False)
     upload_user = Column(Integer, nullable=False)
 
