@@ -9,6 +9,7 @@ import settings
 from models.base import db, User
 from models.utils import salted_password, UserRole
 from utils.logger import init_logging
+from utils.util import escape
 from wsgi import application
 
 init_logging()
@@ -22,7 +23,7 @@ manager.add_command('db', MigrateCommand)
 
 @manager.command
 def create_db():
-    uri = f"mysql+pymysql://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@" \
+    uri = f"mysql+pymysql://{escape(settings.MYSQL_USER)}:{escape(settings.MYSQL_PASSWORD)}@" \
           f"{settings.DB_HOST}:{settings.DB_PORT}/?charset=utf8mb4"
     engine = create_engine(uri,
                            encoding='utf-8',

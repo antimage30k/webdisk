@@ -5,11 +5,13 @@ from exception_handler import handle
 from models.base import db
 from routes.disk import disk as disk_bp
 from routes.main import main as main_bp
+from utils.util import escape
 
 
 class AppConfig:
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}:{}/webdisk?charset=utf8mb4'.format(
-        settings.MYSQL_USER, settings.MYSQL_PASSWORD, settings.DB_HOST, settings.DB_PORT)
+        escape(settings.MYSQL_USER), escape(settings.MYSQL_PASSWORD), settings.DB_HOST,
+        settings.DB_PORT)
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_COMMIT_TEARDOWN = True
 
