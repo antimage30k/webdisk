@@ -80,26 +80,18 @@ def download(file_id):
     return send_file(os.path.join(BASE_FILE_PATH, f.path), as_attachment=True, attachment_filename=f.name)
 
 
-@disk.route('/publish', methods=['POST'])
+@disk.route('/share/set', methods=['POST'])
 @login_required
 def publish():
     file_id = request.json['id']
+    share: bool = request.json['share']
     u: User = current_user()
     f: File = File.get(id=file_id)
     _check_admin_or_uploader(u, f)
-    f.share = FileShare.PUBLIC
-    f.save()
-    return jsonify(f.to_dict())
-
-
-@disk.route('/hide', methods=['POST'])
-@login_required
-def hide():
-    file_id = request.json['id']
-    u: User = current_user()
-    f: File = File.get(id=file_id)
-    _check_admin_or_uploader(u, f)
-    f.share = FileShare.EXCLUSIVE
+    if share is False:
+        f.share = FileShare.EXCLUSIVE
+    elif share is True:
+        f.share = FileShare.PUBLIC
     f.save()
     return jsonify(f.to_dict())
 
