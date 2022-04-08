@@ -43,7 +43,7 @@ def login_required(func):
     @wraps(func)
     def _wrapper(*args, **kwargs):
         u = current_user()
-        if u is None:
+        if u is guest:
             raise Error.not_authorized
         else:
             return func(*args, **kwargs)
