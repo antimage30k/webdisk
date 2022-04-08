@@ -143,7 +143,7 @@ class File(Base):
             uuid=self.uuid,
             type=self.type,
             path=self.path,
-            share=self.share,
+            share=self.share < FileShare.EXCLUSIVE,
             size=self.readable_size,
             uploader=self.upload_user,
             create_time=self.created_time,
