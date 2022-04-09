@@ -21,7 +21,7 @@ def login():
 
 @main.route('/logout', methods=['DELETE'])
 def logout():
-    session.pop('user_id')
+    session.pop('user_id', None)
     return jsonify(guest.to_dict())
 
 
