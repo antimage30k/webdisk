@@ -14,6 +14,7 @@ class AppConfig:
         settings.DB_PORT)
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_COMMIT_TEARDOWN = True
+    SQLALCHEMY_POOL_RECYCLE = 400
 
 
 def create_app():
