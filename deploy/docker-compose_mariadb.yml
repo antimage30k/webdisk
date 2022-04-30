@@ -10,7 +10,7 @@ services:
     networks:
       - disknet
     environment:
-      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_ROOT_PASSWORD=e#zPpPvNi33*8J3C
       - LANG=C.UTF-8
     image: "mariadb:10.7"
     privileged: true

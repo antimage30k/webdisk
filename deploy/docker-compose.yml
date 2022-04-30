@@ -9,7 +9,7 @@ services:
       - /var/log/:/var/log/
     restart: always
     environment:
-      - MYSQL_PASSWORD=test
+      - MYSQL_PASSWORD=e#zPpPvNi33*8J3C
       - DB_HOST=mariadb
       - DB_PORT=3306
       - ADMIN_PASS=c59ykW*k2xm8&TS&
