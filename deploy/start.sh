@@ -13,8 +13,9 @@ python3 manager.py db upgrade
 
 python3 manager.py add_admin
 
-python3 manager.py set_environ
+# python3 manager.py set_environ
 # 启动服务
-service supervisor start
+# Subprocesses will inherit the environment of the shell used to start the supervisord program.
+supervisord -c /etc/supervisor/supervisord.conf
 
 tail -f /dev/null
