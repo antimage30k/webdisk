@@ -4,6 +4,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, SmallInteger, or_
 
+from exception_handler import Error
 from models.utils import UserRole, salted_password, FileType, FileShare, get_readable_size, current_time
 from settings import BASE_FILE_PATH, DOWNLOAD_URL_PREFIX
 
@@ -31,6 +32,13 @@ class Base(db.Model):
     @classmethod
     def get(cls, **kwargs):
         m = cls.query.filter_by(**kwargs).first()
+        return m
+
+    @classmethod
+    def getOr404(cls, **kwargs):
+        m = cls.get(**kwargs)
+        if m is None:
+            raise Error.not_found
         return m
 
     @classmethod

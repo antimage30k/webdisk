@@ -54,7 +54,7 @@ def index():
 @disk.route('/delete/<file_id>', methods=['delete'])
 def delete(file_id):
     u: User = current_user()
-    f: File = File.get(id=file_id)
+    f: File = File.getOr404(id=file_id)
 
     if u is guest:
         raise Error.not_authorized
@@ -76,7 +76,7 @@ def delete(file_id):
 
 @disk.route("/download/<file_id>", methods=['GET'])
 def download(file_id):
-    f: File = File.get(id=file_id)
+    f: File = File.getOr404(id=file_id)
     return send_file(os.path.join(BASE_FILE_PATH, f.path), as_attachment=True, attachment_filename=f.name)
 
 
@@ -86,7 +86,7 @@ def publish():
     file_id = request.json['id']
     share: bool = request.json['share']
     u: User = current_user()
-    f: File = File.get(id=file_id)
+    f: File = File.getOr404(id=file_id)
     _check_admin_or_uploader(u, f)
     if share is False:
         f.share = FileShare.EXCLUSIVE

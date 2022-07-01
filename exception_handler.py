@@ -67,3 +67,4 @@ class Error:
     not_authorized = APIException(msg="Not Authorized.")
     username_occupied = APIException(msg='This username has been occupied.')
     registration_failed = APIException(msg='Registration Failed.')
+    not_found = APIException(code=404, msg="Resource Not Found.")
